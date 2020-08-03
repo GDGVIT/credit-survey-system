@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-const dbURL = "mongodb+srv://Admin:look202020@cluster0-fbsrx.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority"
 
 func PostQuestions(question model.FormQuestion) error {
 	client := utils.GetClient()
