@@ -19,7 +19,7 @@ import (
 	"time"
 )
 
-var JwtSecret = "maYank2423KUmar"
+var JwtSecret = "itsAnewJWTEverytime"
 
 var conf oauth2.Config
 
@@ -46,6 +46,7 @@ func ErrorOccurred(err error, ctx *fiber.Ctx) {
 	ctx.SendStatus(fiber.StatusInternalServerError)
 	ctx.SendString(err.Error())
 }
+
 
 func main() {
 	err := utils.SetClient()
@@ -128,6 +129,7 @@ func main() {
 		{
 			user.Delete("/me", handler.DeleteUser) // DELETE current user
 			user.Get("/me", handler.GetUser)       // GET current user
+			user.Get("/me/forms", handler.GetUserFormsByID) // GET forms of a user
 		}
 
 		form := v1.Group("/form")

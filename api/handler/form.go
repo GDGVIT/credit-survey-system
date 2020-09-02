@@ -47,12 +47,7 @@ func CreateNewForm(ctx *fiber.Ctx) {
 	res, err := form2.CreateForms(form)
 	if err != nil {
 		ctx.Status(fiber.StatusBadGateway)
-		ctx.SendString(err.Error())
-		return
-	}
-	if err != nil {
-		ctx.Status(fiber.StatusBadGateway)
-		ctx.SendString(err.Error())
+		ctx.SendString("UNABLE TO CREATE THE FORM")
 		return
 	}
 	ctx.Status(fiber.StatusCreated)
@@ -78,8 +73,8 @@ func GetAuthorizedForm(ctx *fiber.Ctx) {
 	}
 	formMap, err := form2.GetFormDetails(formid)
 	if err != nil {
-		ctx.Status(fiber.StatusBadRequest)
-		ctx.SendString(err.Error())
+		ctx.Status(fiber.StatusNotFound)
+		ctx.SendString("FORM NOT FOUND")
 		return
 	}
 	ctx.JSON(formMap)
@@ -102,8 +97,8 @@ func PublishForm(ctx *fiber.Ctx) {
 	}
 	formMap, err := form2.GetFormDetails(formid)
 	if err != nil {
-		ctx.Status(fiber.StatusBadRequest)
-		ctx.SendString(err.Error())
+		ctx.Status(fiber.StatusNotFound)
+		ctx.SendString("FORM NOT FOUND")
 		return
 	}
 	creditsOfUser, err := activity.GetCredits(id.(string))
@@ -151,8 +146,8 @@ func UnPublishForm(ctx *fiber.Ctx) {
 	}
 	formMap, err := form2.GetFormDetails(formid)
 	if err != nil {
-		ctx.Status(fiber.StatusBadRequest)
-		ctx.SendString(err.Error())
+		ctx.Status(fiber.StatusNotFound)
+		ctx.SendString("Form not found")
 		return
 	}
 	creditsOfUser, err := activity.GetCredits(id.(string))
@@ -173,7 +168,7 @@ func UnPublishForm(ctx *fiber.Ctx) {
 			activity.ReverseTransfer, id.(string))
 		form2.SetPublishStatus(formid, false)
 		ctx.Status(fiber.StatusOK)
-		ctx.SendString("PUBLISHED")
+		ctx.SendString("UNPUBLISHED")
 		return
 	} else {
 		ctx.Status(fiber.StatusBadRequest)

@@ -6,7 +6,7 @@ import (
 
 type Form struct {
 	FormId          string         `bson:"_id"`
-	CreditsAllotted float64         `bson:"creditsAllotted"`
+	CreditsAllotted float64        `bson:"creditsAllotted"`
 	UserId          string         `bson:"userId"`
 	NumResp         int64          `bson:"numResp"`
 	ResponseRate    float64        `bson:"responseRate"`
