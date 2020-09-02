@@ -77,6 +77,11 @@ func GetAuthorizedForm(ctx *fiber.Ctx) {
 		ctx.SendString("FORM NOT FOUND")
 		return
 	}
+	if formMap.UserId != id.(string) {
+		ctx.Status(fiber.StatusUnauthorized)
+		ctx.SendString("NOT THE USER'S FORM")
+		return
+	}
 	ctx.JSON(formMap)
 }
 
@@ -99,6 +104,11 @@ func PublishForm(ctx *fiber.Ctx) {
 	if err != nil {
 		ctx.Status(fiber.StatusNotFound)
 		ctx.SendString("FORM NOT FOUND")
+		return
+	}
+	if formMap.UserId != id.(string) {
+		ctx.Status(fiber.StatusUnauthorized)
+		ctx.SendString("NOT THE USER'S FORM")
 		return
 	}
 	creditsOfUser, err := activity.GetCredits(id.(string))
@@ -150,15 +160,15 @@ func UnPublishForm(ctx *fiber.Ctx) {
 		ctx.SendString("Form not found")
 		return
 	}
-	creditsOfUser, err := activity.GetCredits(id.(string))
-	if err != nil {
-		ctx.Status(fiber.StatusBadRequest)
-		ctx.SendString("USER NOT FOUND!")
+	if formMap.UserId != id.(string) {
+		ctx.Status(fiber.StatusUnauthorized)
+		ctx.SendString("NOT THE USER'S FORM")
 		return
 	}
-	if formMap.CreditsAllotted > creditsOfUser {
-		ctx.Status(fiber.StatusBadRequest)
-		ctx.SendString("You don't have enough credits.")
+	_, err = activity.GetCredits(id.(string))
+	if err != nil {
+		ctx.Status(fiber.StatusNotFound)
+		ctx.SendString("USER NOT FOUND!")
 		return
 	}
 	if formMap.IsPublished {
@@ -175,6 +185,4 @@ func UnPublishForm(ctx *fiber.Ctx) {
 		ctx.SendString("ALREADY UNPUBLISHED!")
 		return
 	}
-	ctx.Status(fiber.StatusFailedDependency)
-	ctx.SendString("Error Occurred.")
 }
