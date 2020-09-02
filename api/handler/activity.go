@@ -44,7 +44,7 @@ func DeleteUser(ctx *fiber.Ctx) {
 	res, err := usr.DeleteUser(id.(string))
 	if err != nil {
 		ctx.Status(fiber.StatusNotAcceptable)
-		ctx.SendString(err.Error())
+		ctx.SendString("UNABLE TO DELETE THE USER")
 		return
 	}
 	if res == 0 {

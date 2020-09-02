@@ -30,8 +30,8 @@ func GetFormForResponse(ctx *fiber.Ctx) {
 	}
 	formMap, err := form2.GetFormDetails(formid)
 	if err != nil {
-		ctx.Status(fiber.StatusBadRequest)
-		ctx.SendString(err.Error())
+		ctx.Status(fiber.StatusNotFound)
+		ctx.SendString("Form not found in our database.")
 		return
 	}
 	if !formMap.IsPublished {
@@ -108,7 +108,7 @@ func PostFormResponse(ctx *fiber.Ctx) {
 	formMap, err := form2.GetFormDetails(formid)
 	if err != nil {
 		ctx.Status(fiber.StatusBadRequest)
-		ctx.SendString(err.Error())
+		ctx.SendString("Error fetching form from out database")
 		return
 	}
 	if !formMap.IsPublished {
@@ -148,6 +148,7 @@ func PostFormResponse(ctx *fiber.Ctx) {
 		ctx.SendString("Already Filled the Form.")
 		return
 	}
+	err = form2.IncrementNumberOfResponsesByFormID(formid, 1) // Increasing the form response count
 	activity.AddActivity(
 		*model.NewActivity("TOOK A SURVEY",formMap.GainRate, formMap.FormId),activity.Responded, id.(string))
 	ctx.Status(fiber.StatusCreated)

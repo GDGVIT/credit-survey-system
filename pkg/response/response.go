@@ -11,7 +11,6 @@ import (
 
 func PostResponse(ansPayload model.Response) error {
 	client := utils.GetClient()
-
 	answers := client.Database("Main").Collection("Answers")
 	_, err := answers.InsertOne(context.TODO(), ansPayload)
 	if err != nil {

@@ -74,7 +74,7 @@ func CreateNewUserActivity(initialCredit int64, UserID string) error {
 	// New activity logs instance created
 	newActivityLog := model.ActivityLog{
 		UserId: UserID,
-		Credits: initialCredit,
+		Credits: float64(initialCredit),
 		SurveysMade: 0,
 		SurveysTaken: 0,
 		Activities: []model.Activity{

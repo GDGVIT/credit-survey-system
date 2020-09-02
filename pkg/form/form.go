@@ -76,3 +76,22 @@ func SetPublishStatus(id string, status bool) error {
 	}
 	return nil
 }
+
+func IncrementNumberOfResponsesByFormID(id string, num int) error {
+	client := utils.GetClient()
+	forms := client.Database("Main").Collection("Forms")
+	_, err := forms.UpdateOne(context.TODO(), bson.M{
+		"_id": bson.M{
+			"$eq": id,
+		},
+	}, bson.M{
+		"$inc": bson.M{
+			"numResp": num,
+		},
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -100,3 +100,27 @@ func GetUser(id string) (model.User, error) {
 
 	return m, nil
 }
+
+func GetAllFormsOfUserID(id string, formList *[]model.Form) error{
+	client := utils.GetClient()
+	forms := client.Database("Main").Collection("Forms")
+	curr, err := forms.Find(context.TODO(), bson.M{
+		"userId": bson.M{
+			"$eq": id,
+		},
+	})
+	if err != nil {
+		return err
+	}
+	*formList = make([]model.Form, curr.RemainingBatchLength())
+	i := 0
+	for curr.Next(context.TODO()) {
+		curr.Decode(&(*formList)[i])
+		i += 1
+		if curr.Err() != nil {
+			return curr.Err()
+		}
+	}
+	curr.Close(context.TODO())
+	return nil
+}
